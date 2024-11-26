@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms.ContactForm import ContactForm
+from .forms.DevisForm import DevisForm
 from django.contrib import messages
 
 
@@ -10,16 +11,18 @@ def index(request):
     callback = ''
     if request.method == 'POST':
         # date treatment
-        form = ContactForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Merci de nous avoir contacté, nous vous recontacterons le !")
-            callback = form.date
-            return redirect('contact')
+        form_devis = DevisForm(request.POST)
+        if form_devis.is_valid():
+            form_devis.save()
+            messages.success(request, "Merci de nous avoir contacté, nous vous recontacterons bientot !")
+            # callback = form_devis.date
+            return redirect('home')
+        else:
+            print(f"Echec d'enregistrement du devis! {form_devis}")
     else:
-        form = ContactForm()
+        form_devis = DevisForm()
     context = {
-        'form': form,
+        'form_devis': form_devis,
         'callback': callback
     }
     return render(request, "showcase_site/index.html", context)
